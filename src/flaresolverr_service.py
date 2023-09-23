@@ -39,6 +39,8 @@ CHALLENGE_TITLES = [
     'DDoS-Guard'
 ]
 CHALLENGE_SELECTORS = [
+    # Bing
+    'input[id^=cf-chl-widget]:not([value])',
     # Cloudflare
     '#cf-challenge-running', '.ray_id', '.attack-box', '#cf-please-wait', '#challenge-spinner', '#trk_jschal_js',
     # Custom CloudFlare for EbookParadijs, Film-Paleis, MuziekFabriek and Puur-Hollands
