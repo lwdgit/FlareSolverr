@@ -2,6 +2,7 @@ import logging
 import platform
 import sys
 import time
+import os
 from datetime import timedelta
 from urllib.parse import unquote
 
@@ -395,6 +396,7 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     challenge_res.status = 200  # todo: fix, selenium not provides this info
     challenge_res.cookies = driver.get_cookies()
     challenge_res.userAgent = utils.get_user_agent(driver)
+    driver.save_screenshot(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screenshot.png'))
 
     if not req.returnOnlyCookies:
         challenge_res.headers = {}  # todo: fix, selenium not provides this info
