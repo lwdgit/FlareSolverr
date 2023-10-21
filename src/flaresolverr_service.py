@@ -394,6 +394,60 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     challenge_res = ChallengeResolutionResultT({})
     challenge_res.url = driver.current_url
     challenge_res.status = 200  # todo: fix, selenium not provides this info
+    if hasattr(req, 'username') and hasattr(req, 'password'):
+        logging.info("try click login button")
+        button = driver.find_element(
+            by=By.TAG_NAME,
+            value="button"
+        )
+        if button:
+            actions = ActionChains(driver)
+            actions.move_to_element_with_offset(button, 5, 7)
+            actions.click(button)
+            actions.perform()
+            logging.info("button clicked!")
+            WebDriverWait(driver, SHORT_TIMEOUT).until(staleness_of(html_element))
+            input = driver.find_element(
+                by=By.ID,
+                value="username"
+            )
+            print('username', req.username)
+            actions.move_to_element_with_offset(input, 5, 7)
+            actions.click(input)
+            actions.send_keys(req.username)
+            actions.perform()
+            button = driver.find_element(
+                by=By.XPATH,
+                value="//button[normalize-space()='Continue']"
+            )
+            actions.move_to_element_with_offset(button, 5, 7)
+            actions.click(button)
+            actions.perform()
+            WebDriverWait(driver, SHORT_TIMEOUT).until(staleness_of(html_element))
+            
+
+            input = driver.find_element(
+                by=By.ID,
+                value="password"
+            )
+            print("password", req.password)
+            actions.move_to_element_with_offset(input, 5, 7)
+            actions.click(input)
+            actions.send_keys(req.password)
+            actions.perform()
+            time.sleep(1)
+            button = driver.find_elements(
+                by=By.XPATH,
+                value="//button[contains(.,'Continue')]"
+            )[-1]
+            print(button.get_attribute('class'))
+            actions.move_to_element_with_offset(button, 5, 7)
+            actions.click(button)
+            actions.perform()
+            WebDriverWait(driver, SHORT_TIMEOUT).until(staleness_of(html_element))
+            time.sleep(1)
+            driver.get('http://chat.openai.com/api/auth/session')
+
     challenge_res.cookies = driver.get_cookies()
     challenge_res.userAgent = utils.get_user_agent(driver)
     driver.save_screenshot(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screenshot.png'))
