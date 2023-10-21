@@ -1,6 +1,9 @@
 {
   "name": "flaresolverr",
   "version": "3.3.6",
+  "scripts": {
+    "build": "chmod +x ./src/chromedriver"
+  },
   "description": "Proxy server to bypass Cloudflare protection",
   "author": "Diego Heras (ngosang / ngosang@hotmail.es)",
   "license": "MIT"

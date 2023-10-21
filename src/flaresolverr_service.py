@@ -424,7 +424,7 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
             actions.click(button)
             actions.perform()
             WebDriverWait(driver, SHORT_TIMEOUT).until(staleness_of(html_element))
-            
+            time.sleep(3)
 
             input = driver.find_element(
                 by=By.ID,
@@ -435,7 +435,7 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
             actions.click(input)
             actions.send_keys(req.password)
             actions.perform()
-            time.sleep(1)
+            time.sleep(3)
             button = driver.find_elements(
                 by=By.XPATH,
                 value="//button[contains(.,'Continue')]"
@@ -445,7 +445,7 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
             actions.click(button)
             actions.perform()
             WebDriverWait(driver, SHORT_TIMEOUT).until(staleness_of(html_element))
-            time.sleep(1)
+            time.sleep(3)
             driver.get('http://chat.openai.com/api/auth/session')
 
     challenge_res.cookies = driver.get_cookies()
