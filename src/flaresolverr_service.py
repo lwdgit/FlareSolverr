@@ -299,6 +299,8 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     logging.debug(f'Navigating to... {req.url}')
     if method == 'POST':
         _post_request2(req, driver)
+    elif req.headers is not None:
+        _get_request(req, driver)
     else:
         driver.get(req.url)
         driver.start_session()  # required to bypass Cloudflare
@@ -312,6 +314,8 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
         # reload the page
         if method == 'POST':
             _post_request2(req, driver)
+        elif req.headers is not None:
+            _get_request(req, driver)
         else:
             driver.get(req.url)
             driver.start_session()  # required to bypass Cloudflare
@@ -514,3 +518,24 @@ return post(arguments[0], arguments[1], arguments[2], arguments[3])
 """, req.url, req.headers, req.postData)
     print('post', req.url, req.headers, req.postData, ret)
 
+def _get_request(req: V1RequestBase, driver: WebDriver):
+    driver.get(req.url)
+    driver.start_session()  # required to bypass Cloudflare
+    ret = driver.execute_async_script("""
+function post(path, headers, callback) {
+    const form = document.createElement('form');
+    fetch(path, {
+        method: 'GET',
+        headers,
+        credentials: 'include'
+    })
+    .then(res => res.text())
+    .catch(e => String(e))
+    .then(res => {
+        callback(res)
+        document.write(res)
+    })
+}
+return post(arguments[0], arguments[1], arguments[2])
+""", req.url, req.headers)
+    print('get', req.url, req.headers, ret)
