@@ -79,7 +79,7 @@ def test_browser_installation():
 
 def index_endpoint() -> IndexResponse:
     res = IndexResponse({})
-    res.msg = "FlareSolverr is ready!"
+    res.msg = "server is ready!"
     res.version = utils.get_flaresolverr_version()
     res.userAgent = utils.get_user_agent()
     return res
@@ -314,8 +314,6 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
         # reload the page
         if method == 'POST':
             _post_request2(req, driver)
-        elif req.headers is not None:
-            _get_request(req, driver)
         else:
             driver.get(req.url)
             driver.start_session()  # required to bypass Cloudflare
