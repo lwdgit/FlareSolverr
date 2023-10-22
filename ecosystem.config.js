@@ -7,7 +7,7 @@ module.exports = {
       script: 'python',
       args: './src/flaresolverr.py',
       env: {
-        PORT: process.env.PORT,
+        PORT: 8181,
       },
       cwd: __dirname
     }
