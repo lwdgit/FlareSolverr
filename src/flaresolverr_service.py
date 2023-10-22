@@ -299,8 +299,6 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     logging.debug(f'Navigating to... {req.url}')
     if method == 'POST':
         _post_request2(req, driver)
-    elif req.headers is not None:
-        _get_request(req, driver)
     else:
         driver.get(req.url)
         driver.start_session()  # required to bypass Cloudflare
@@ -314,6 +312,8 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
         # reload the page
         if method == 'POST':
             _post_request2(req, driver)
+        elif hasattr(req, 'useFetch'):
+            _get_request(req, driver)
         else:
             driver.get(req.url)
             driver.start_session()  # required to bypass Cloudflare
